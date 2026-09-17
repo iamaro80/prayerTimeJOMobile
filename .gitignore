@@ -1,0 +1,20 @@
+﻿*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+/app/build
+/captures
+.externalNativeBuild
+.cxx
+*.hprof
+
+# Ignore root-level test screenshots & dumps only
+/*.png
+/*.xml
+
+# Keep source and assets
+!/app/src/**
+!/gradle/**
+!/assets/**

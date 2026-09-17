@@ -1,0 +1,96 @@
+<resources>
+    <string name="app_name">Prayer Times in Jordan</string>
+    <string name="location_title">Amman - Jordan</string>
+    <string name="current_prayer">Current Prayer</string>
+    <string name="next_prayer">Next Prayer</string>
+    <string name="time_remaining">Time Remaining</string>
+    <string name="hours">hrs</string>
+    <string name="minutes">mins</string>
+    <string name="seconds">secs</string>
+    
+    <!-- Prayers -->
+    <string name="prayer_fajr">Fajr</string>
+    <string name="prayer_shurooq">Sunrise</string>
+    <string name="prayer_dhuhr">Dhuhr</string>
+    <string name="prayer_asr">Asr</string>
+    <string name="prayer_maghrib">Maghrib</string>
+    <string name="prayer_isha">Isha</string>
+    <string name="shurooq_note">Sunrise (Not a prayer)</string>
+    
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_settings">Settings</string>
+    <string name="sync_now">Sync Now</string>
+    <string name="syncing">Syncing with Iftaa…</string>
+    <string name="sync_success">Synced successfully</string>
+    <string name="sync_failed">Failed to sync. Using cached data.</string>
+    <string name="last_updated">Last updated: %1$s</string>
+    <string name="retry">Retry</string>
+    <string name="stale_cache_warning">Prayer times may be outdated. Tap to refresh.</string>
+    
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="section_general">General</string>
+    <string name="section_appearance">Appearance</string>
+    <string name="section_notifications">Prayer Notifications</string>
+    <string name="section_reminder">Pre-Prayer Reminder</string>
+    <string name="section_sync">Data &amp; Synchronization</string>
+    
+    <string name="pref_language">Language</string>
+    <string name="pref_language_summary">Choose Arabic or English</string>
+    <string name="language_ar">العربية (Arabic)</string>
+    <string name="language_en">English</string>
+    
+    <string name="pref_time_format">Time Format</string>
+    <string name="format_12h">12-Hour (AM/PM)</string>
+    <string name="format_24h">24-Hour</string>
+    
+    <string name="pref_theme_color">Color Theme</string>
+    <string name="theme_emerald_original">Emerald Original</string>
+    <string name="theme_soft_terracotta">Soft Terracotta</string>
+    <string name="theme_seafoam_sand">Seafoam &amp; Sand</string>
+    <string name="theme_muted_slate_gold">Muted Slate &amp; Gold</string>
+    <string name="theme_deep_charcoal_yellow">Deep Charcoal &amp; Canary</string>
+    
+    <string name="pref_dark_mode">Display Mode</string>
+    <string name="mode_system">Follow System</string>
+    <string name="mode_light">Light Mode</string>
+    <string name="mode_dark">Dark Mode</string>
+    
+    <string name="sound_enabled">Sound</string>
+    <string name="sound_track">Select Audio</string>
+    <string name="preview_audio">Preview</string>
+    <string name="stop_audio">Stop</string>
+    <string name="select">Select</string>
+    <string name="cancel">Cancel</string>
+    
+    <string name="reminder_title">Reminder Before Next Prayer</string>
+    <string name="reminder_desc">Reminds you to perform current prayer before time expires</string>
+    <string name="reminder_off">Off</string>
+    <string name="reminder_5min">5 minutes before</string>
+    <string name="reminder_10min">10 minutes before</string>
+    <string name="reminder_15min">15 minutes before (Default)</string>
+    <string name="reminder_45min">45 minutes before</string>
+    <string name="reminder_60min">60 minutes before</string>
+    
+    <string name="notif_permission_banner">Notification permission is not granted. Tap here to allow notifications.</string>
+    <string name="grant_permission">Grant</string>
+    <string name="notif_prayer_title">Time for %1$s Prayer</string>
+    <string name="notif_prayer_body">It is now time for the %1$s prayer in Amman.</string>
+    <string name="notif_reminder_title">Reminder: %1$s soon</string>
+    <string name="notif_reminder_body">%1$d minutes remaining until %2$s. Perform your prayer!</string>
+    
+    <!-- Azan Track Titles -->
+    <string name="track_1">Azan Track 1 (1030)</string>
+    <string name="track_2">Azan Track 2 (4001)</string>
+    <string name="track_3">Azan Track 3 (4006)</string>
+    <string name="track_4">Azan Track 4 (4008)</string>
+    <string name="track_5">Azan Track 5 (400861)</string>
+    <string name="track_6">Azan Track 6 (4026)</string>
+    <string name="track_7">Azan Track 7 (4029)</string>
+    <string name="track_8">Azan Track 8 (403801)</string>
+    <string name="track_9">Azan Track 9 (426698)</string>
+    <string name="track_10">Azan Track 10 (456572)</string>
+    <string name="track_11">Azan Track 11 (458122)</string>
+    <string name="track_12">Azan Takbeer (Short)</string>
+</resources>

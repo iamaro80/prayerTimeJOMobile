@@ -1,0 +1,96 @@
+<resources>
+    <string name="app_name">أوقات الصلاة في الأردن</string>
+    <string name="location_title">عمان - الأردن</string>
+    <string name="current_prayer">الصلاة الحالية</string>
+    <string name="next_prayer">الصلاة القادمة</string>
+    <string name="time_remaining">الوقت المتبقي</string>
+    <string name="hours">ساعة</string>
+    <string name="minutes">دقيقة</string>
+    <string name="seconds">ثانية</string>
+    
+    <!-- Prayers -->
+    <string name="prayer_fajr">الفجر</string>
+    <string name="prayer_shurooq">الشروق</string>
+    <string name="prayer_dhuhr">الظهر</string>
+    <string name="prayer_asr">العصر</string>
+    <string name="prayer_maghrib">المغرب</string>
+    <string name="prayer_isha">العشاء</string>
+    <string name="shurooq_note">الشروق (وقت شروق الشمس وليس صلاة)</string>
+    
+    <!-- Navigation -->
+    <string name="nav_home">الرئيسية</string>
+    <string name="nav_settings">الإعدادات</string>
+    <string name="sync_now">تحديث أوقات الصلاة</string>
+    <string name="syncing">جارٍ المزامنة مع دائرة الإفتاء…</string>
+    <string name="sync_success">تم تحديث أوقات الصلاة بنجاح</string>
+    <string name="sync_failed">تعذر الاتصال. تم استخدام البيانات المحفوظة.</string>
+    <string name="last_updated">آخر تحديث: %1$s</string>
+    <string name="retry">إعادة المحاولة</string>
+    <string name="stale_cache_warning">البيانات قد تكون قديمة. اضغط للتحديث.</string>
+    
+    <!-- Settings -->
+    <string name="settings_title">الإعدادات</string>
+    <string name="section_general">عام</string>
+    <string name="section_appearance">المظهر والألوان</string>
+    <string name="section_notifications">تنبيهات الصلوات</string>
+    <string name="section_reminder">التذكير قبل الصلاة القادمة</string>
+    <string name="section_sync">البيانات والمزامنة</string>
+    
+    <string name="pref_language">لغة التطبيق</string>
+    <string name="pref_language_summary">التبديل بين العربية والإنجليزية</string>
+    <string name="language_ar">العربية (الافتراضية)</string>
+    <string name="language_en">English (الإنجليزية)</string>
+    
+    <string name="pref_time_format">تنسيق الوقت</string>
+    <string name="format_12h">12 ساعة (صباحاً/مساءً)</string>
+    <string name="format_24h">24 ساعة</string>
+    
+    <string name="pref_theme_color">سمة الألوان</string>
+    <string name="theme_emerald_original">الزمرد الأصلي (Emerald Original)</string>
+    <string name="theme_soft_terracotta">التراكوتا الهادئ (Soft Terracotta)</string>
+    <string name="theme_seafoam_sand">زبد البحر والرمال (Seafoam &amp; Sand)</string>
+    <string name="theme_muted_slate_gold">الرمادي والذهب (Muted Slate &amp; Gold)</string>
+    <string name="theme_deep_charcoal_yellow">الفحم والأصفر (Deep Charcoal &amp; Canary)</string>
+    
+    <string name="pref_dark_mode">وضع العرض</string>
+    <string name="mode_system">حسب النظام</string>
+    <string name="mode_light">الوضع الفاتح</string>
+    <string name="mode_dark">الوضع الداكن</string>
+    
+    <string name="sound_enabled">تشغيل الصوت</string>
+    <string name="sound_track">اختيار نغمة الأذان</string>
+    <string name="preview_audio">معاينة</string>
+    <string name="stop_audio">إيقاف</string>
+    <string name="select">اختيار</string>
+    <string name="cancel">إلغاء</string>
+    
+    <string name="reminder_title">وقت التذكير قبل الصلاة القادمة</string>
+    <string name="reminder_desc">يساعدك على أداء الصلاة الحالية قبل خروج وقتها</string>
+    <string name="reminder_off">معطّل</string>
+    <string name="reminder_5min">قبل 5 دقائق</string>
+    <string name="reminder_10min">قبل 10 دقائق</string>
+    <string name="reminder_15min">قبل 15 دقيقة (افتراضي)</string>
+    <string name="reminder_45min">قبل 45 دقيقة</string>
+    <string name="reminder_60min">قبل 60 دقيقة (ساعة)</string>
+    
+    <string name="notif_permission_banner">إذن الإشعارات غير مفعّل. اضغط هنا لتفعيل إشعارات الأذان.</string>
+    <string name="grant_permission">تفعيل</string>
+    <string name="notif_prayer_title">حان الآن موعد صلاة %1$s</string>
+    <string name="notif_prayer_body">حان الآن موعد صلاة %1$s حسب التوقيت المحلي لمدينة عمان.</string>
+    <string name="notif_reminder_title">تذكير: اقترب وقت صلاة %1$s</string>
+    <string name="notif_reminder_body">بقي %1$d دقيقة على موعد أذان %2$s. تذكر أداء صلاتك!</string>
+    
+    <!-- Azan Track Titles -->
+    <string name="track_1">أذان 1 (صوت هادئ)</string>
+    <string name="track_2">أذان 2 (صوت ندي)</string>
+    <string name="track_3">أذان 3 (صوت خاشع)</string>
+    <string name="track_4">أذان 4 (صوت مكي)</string>
+    <string name="track_5">أذان 5 (أذان المسجد الأقصى)</string>
+    <string name="track_6">أذان 6 (صوت حجازي)</string>
+    <string name="track_7">أذان 7 (صوت مصري)</string>
+    <string name="track_8">أذان 8 (أذان الحرم المكي)</string>
+    <string name="track_9">أذان 9 (أذان الحرم النبوي)</string>
+    <string name="track_10">أذان 10 (صوت شجي كامل)</string>
+    <string name="track_11">أذان 11 (أذان القدس الشريف)</string>
+    <string name="track_12">تكبيرات الأذان (موجز)</string>
+</resources>

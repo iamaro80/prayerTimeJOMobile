@@ -220,20 +220,7 @@ fun PrayerItemCard(
  color = MaterialTheme.colorScheme.onSurface
  )
 
- if (!prayer.isPrayer) {
- Spacer(modifier = Modifier.width(6.dp))
- Surface(
- shape = MaterialTheme.shapes.small,
- color = MaterialTheme.colorScheme.surfaceVariant
- ) {
- Text(
- text = stringResource(R.string.shurooq_note),
- style = MaterialTheme.typography.labelSmall,
- modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
- color = MaterialTheme.colorScheme.onSurfaceVariant
- )
- }
- } else if (isNext) {
+ if (isNext) {
  Spacer(modifier = Modifier.width(6.dp))
  Surface(
  shape = MaterialTheme.shapes.small,

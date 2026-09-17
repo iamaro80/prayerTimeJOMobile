@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">أوقات الصلاة في الأردن</string>
+    <string name="app_name">مواقيت الصلاة</string>
     <string name="location_title">عمان - الأردن</string>
     <string name="current_prayer">الصلاة الحالية</string>
     <string name="next_prayer">الصلاة القادمة</string>

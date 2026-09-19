@@ -88,13 +88,15 @@ class MainActivity : ComponentActivity() {
             PrayerTimeTheme(
                 themeName = prayerState.theme,
                 darkMode = prayerState.darkMode,
-                language = if (prayerState.isArabic) "ar" else "en"
+                language = if (prayerState.isArabic) "ar" else "en",
+                fontScale = prayerState.fontScale
             ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     var showSettingsSheet by remember { mutableStateOf(false) }
+                    var showQiblaDialog by remember { mutableStateOf(false) }
                     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
                     HomeScreen(
@@ -107,8 +109,17 @@ class MainActivity : ComponentActivity() {
                         },
                         onNavigateToSettings = {
                             showSettingsSheet = true
+                        },
+                        onNavigateToQibla = {
+                            showQiblaDialog = true
                         }
                     )
+
+                    if (showQiblaDialog) {
+                        jo.aliftaa.prayertimes.qibla.QiblaCompassDialog(
+                            onDismiss = { showQiblaDialog = false }
+                        )
+                    }
 
                     if (showSettingsSheet) {
                         ModalBottomSheet(

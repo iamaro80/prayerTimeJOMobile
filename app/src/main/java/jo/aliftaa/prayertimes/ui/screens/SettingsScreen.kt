@@ -125,53 +125,113 @@ fun SettingsContent(
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.SemiBold
                     )
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
 
-                    val themeOptions = listOf(
-                        "emerald_original" to stringResource(R.string.theme_emerald_original),
-                        "soft_terracotta" to stringResource(R.string.theme_soft_terracotta),
-                        "seafoam_sand" to stringResource(R.string.theme_seafoam_sand),
-                        "muted_slate_gold" to stringResource(R.string.theme_muted_slate_gold),
-                        "deep_charcoal_yellow" to stringResource(R.string.theme_deep_charcoal_yellow)
+                    val themeList = listOf(
+                        Triple("emerald_original", stringResource(R.string.theme_emerald_original), androidx.compose.ui.graphics.Color(0xFF10B981)),
+                        Triple("soft_terracotta", stringResource(R.string.theme_soft_terracotta), androidx.compose.ui.graphics.Color(0xFFC27854)),
+                        Triple("seafoam_sand", stringResource(R.string.theme_seafoam_sand), androidx.compose.ui.graphics.Color(0xFF205D6B)),
+                        Triple("muted_slate_gold", stringResource(R.string.theme_muted_slate_gold), androidx.compose.ui.graphics.Color(0xFFD4AF37)),
+                        Triple("deep_charcoal_yellow", stringResource(R.string.theme_deep_charcoal_yellow), androidx.compose.ui.graphics.Color(0xFFEAB308)),
+                        Triple("simple", stringResource(R.string.theme_simple), androidx.compose.ui.graphics.Color(0xFF2563EB))
                     )
 
-                    // Scrollable row of FilterChips for themes
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .horizontalScroll(rememberScrollState()),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        themeOptions.forEach { (key, name) ->
-                            FilterChip(
-                                selected = (uiState.theme == key) || (uiState.theme == "green" && key == "emerald_original") || (uiState.theme == "emerald" && key == "emerald_original"),
-                                onClick = { viewModel.setTheme(key) },
-                                label = { Text(name) }
+                    // Vertical list with color swatch, title, and radio button
+                    themeList.forEach { (key, name, swatchColor) ->
+                        val isSelected = (uiState.theme == key) ||
+                                (key == "emerald_original" && (uiState.theme == "green" || uiState.theme == "emerald"))
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    viewModel.setTheme(key)
+                                    if (key == "simple") {
+                                        viewModel.setDarkMode(uiState.simpleMode)
+                                    }
+                                }
+                                .padding(vertical = 8.dp, horizontal = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            // Swatch dot
+                            androidx.compose.foundation.Canvas(
+                                modifier = Modifier.size(20.dp)
+                            ) {
+                                drawCircle(color = swatchColor)
+                            }
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text(
+                                text = name,
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                modifier = Modifier.weight(1f)
                             )
+                            RadioButton(
+                                selected = isSelected,
+                                onClick = {
+                                    viewModel.setTheme(key)
+                                    if (key == "simple") {
+                                        viewModel.setDarkMode(uiState.simpleMode)
+                                    }
+                                }
+                            )
+                        }
+                    }
+
+                    // Display Mode (Follow System, Light, Dark) - only for Simple theme
+                    if (uiState.theme == "simple") {
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
+
+                        Text(
+                            text = stringResource(R.string.pref_dark_mode),
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        val modeOptions = listOf(
+                            "system" to stringResource(R.string.mode_system),
+                            "light" to stringResource(R.string.mode_light),
+                            "dark" to stringResource(R.string.mode_dark)
+                        )
+
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                            modeOptions.forEach { (modeKey, modeName) ->
+                                FilterChip(
+                                    selected = uiState.simpleMode == modeKey,
+                                    onClick = { viewModel.setSimpleMode(modeKey) },
+                                    label = { Text(modeName) },
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .padding(horizontal = 2.dp)
+                                )
+                            }
                         }
                     }
 
                     HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
 
+                    // Font Size scaling control
                     Text(
-                        text = stringResource(R.string.pref_dark_mode),
+                        text = stringResource(R.string.pref_font_size),
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.SemiBold
                     )
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    val modeOptions = listOf(
-                        "system" to stringResource(R.string.mode_system),
-                        "light" to stringResource(R.string.mode_light),
-                        "dark" to stringResource(R.string.mode_dark)
+                    val fontSizes = listOf(
+                        "small" to stringResource(R.string.font_size_small),
+                        "default" to stringResource(R.string.font_size_default),
+                        "medium" to stringResource(R.string.font_size_medium),
+                        "large" to stringResource(R.string.font_size_large)
                     )
 
                     Row(modifier = Modifier.fillMaxWidth()) {
-                        modeOptions.forEach { (modeKey, modeName) ->
+                        fontSizes.forEach { (scaleKey, scaleName) ->
                             FilterChip(
-                                selected = uiState.darkMode == modeKey,
-                                onClick = { viewModel.setDarkMode(modeKey) },
-                                label = { Text(modeName) },
+                                selected = uiState.fontScale == scaleKey,
+                                onClick = { viewModel.setFontScale(scaleKey) },
+                                label = { Text(scaleName) },
                                 modifier = Modifier
                                     .weight(1f)
                                     .padding(horizontal = 2.dp)

@@ -53,6 +53,13 @@ class PreferencesRepository(private val context: Context) {
 
         private const val EARLY_PREFS_NAME = "prayer_early_prefs"
         private const val KEY_EARLY_LANGUAGE = "app_language"
+        private const val KEY_EARLY_THEME = "app_theme"
+        private const val KEY_EARLY_DARK_MODE = "dark_mode"
+        private const val KEY_EARLY_FONT_SCALE = "font_scale"
+        private const val KEY_EARLY_SIMPLE_MODE = "simple_mode"
+
+        val KEY_FONT_SCALE = stringPreferencesKey("font_scale") // "small", "default", "medium", "large"
+        val KEY_SIMPLE_MODE = stringPreferencesKey("simple_mode") // "system", "light", "dark"
 
         fun getLanguageSync(context: Context): String {
             val prefs = context.getSharedPreferences(EARLY_PREFS_NAME, Context.MODE_PRIVATE)
@@ -65,11 +72,61 @@ class PreferencesRepository(private val context: Context) {
                 .putString(KEY_EARLY_LANGUAGE, language)
                 .apply()
         }
+
+        fun getThemeSync(context: Context): String {
+            val prefs = context.getSharedPreferences(EARLY_PREFS_NAME, Context.MODE_PRIVATE)
+            return prefs.getString(KEY_EARLY_THEME, "emerald_original") ?: "emerald_original"
+        }
+
+        fun setThemeSync(context: Context, theme: String) {
+            context.getSharedPreferences(EARLY_PREFS_NAME, Context.MODE_PRIVATE)
+                .edit()
+                .putString(KEY_EARLY_THEME, theme)
+                .apply()
+        }
+
+        fun getDarkModeSync(context: Context): String {
+            val prefs = context.getSharedPreferences(EARLY_PREFS_NAME, Context.MODE_PRIVATE)
+            return prefs.getString(KEY_EARLY_DARK_MODE, "system") ?: "system"
+        }
+
+        fun setDarkModeSync(context: Context, mode: String) {
+            context.getSharedPreferences(EARLY_PREFS_NAME, Context.MODE_PRIVATE)
+                .edit()
+                .putString(KEY_EARLY_DARK_MODE, mode)
+                .apply()
+        }
+
+        fun getFontScaleSync(context: Context): String {
+            val prefs = context.getSharedPreferences(EARLY_PREFS_NAME, Context.MODE_PRIVATE)
+            return prefs.getString(KEY_EARLY_FONT_SCALE, "default") ?: "default"
+        }
+
+        fun setFontScaleSync(context: Context, scale: String) {
+            context.getSharedPreferences(EARLY_PREFS_NAME, Context.MODE_PRIVATE)
+                .edit()
+                .putString(KEY_EARLY_FONT_SCALE, scale)
+                .apply()
+        }
+
+        fun getSimpleModeSync(context: Context): String {
+            val prefs = context.getSharedPreferences(EARLY_PREFS_NAME, Context.MODE_PRIVATE)
+            return prefs.getString(KEY_EARLY_SIMPLE_MODE, "system") ?: "system"
+        }
+
+        fun setSimpleModeSync(context: Context, mode: String) {
+            context.getSharedPreferences(EARLY_PREFS_NAME, Context.MODE_PRIVATE)
+                .edit()
+                .putString(KEY_EARLY_SIMPLE_MODE, mode)
+                .apply()
+        }
     }
 
     val languageFlow: Flow<String> = context.dataStore.data.map { it[KEY_LANGUAGE] ?: "ar" }
-    val themeFlow: Flow<String> = context.dataStore.data.map { it[KEY_THEME] ?: "green" }
+    val themeFlow: Flow<String> = context.dataStore.data.map { it[KEY_THEME] ?: "emerald_original" }
     val darkModeFlow: Flow<String> = context.dataStore.data.map { it[KEY_DARK_MODE] ?: "system" }
+    val fontScaleFlow: Flow<String> = context.dataStore.data.map { it[KEY_FONT_SCALE] ?: "default" }
+    val simpleModeFlow: Flow<String> = context.dataStore.data.map { it[KEY_SIMPLE_MODE] ?: "system" }
     val is24HourFlow: Flow<Boolean> = context.dataStore.data.map { it[KEY_TIME_FORMAT_24] ?: false }
     val reminderMinutesFlow: Flow<Int> = context.dataStore.data.map { it[KEY_REMINDER_MINUTES] ?: 15 }
     val lastSyncTimeFlow: Flow<Long> = context.dataStore.data.map { it[KEY_LAST_SYNC_TIME] ?: 0L }
@@ -82,10 +139,22 @@ class PreferencesRepository(private val context: Context) {
 
     suspend fun setTheme(theme: String) {
         context.dataStore.edit { it[KEY_THEME] = theme }
+        setThemeSync(context, theme)
     }
 
     suspend fun setDarkMode(mode: String) {
         context.dataStore.edit { it[KEY_DARK_MODE] = mode }
+        setDarkModeSync(context, mode)
+    }
+
+    suspend fun setFontScale(scale: String) {
+        context.dataStore.edit { it[KEY_FONT_SCALE] = scale }
+        setFontScaleSync(context, scale)
+    }
+
+    suspend fun setSimpleMode(mode: String) {
+        context.dataStore.edit { it[KEY_SIMPLE_MODE] = mode }
+        setSimpleModeSync(context, mode)
     }
 
     suspend fun set24HourFormat(is24Hour: Boolean) {

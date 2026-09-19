@@ -1,4 +1,4 @@
-﻿package jo.aliftaa.prayertimes.ui.viewmodel
+package jo.aliftaa.prayertimes.ui.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -17,8 +17,10 @@ import java.util.Locale
 
 data class SettingsUiState(
     val language: String = "ar",
-    val theme: String = "green",
+    val theme: String = "emerald_original",
     val darkMode: String = "system",
+    val fontScale: String = "default",
+    val simpleMode: String = "system",
     val is24Hour: Boolean = false,
     val reminderMinutes: Int = 15,
     val lastSyncFormatted: String = "",
@@ -32,7 +34,15 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     private val prayerRepo = PrayerRepository(application, PrayerApiClient(), preferencesRepo)
     private val notificationHelper = PrayerNotificationHelper(application)
 
-    private val _uiState = MutableStateFlow(SettingsUiState())
+    private val _uiState = MutableStateFlow(
+        SettingsUiState(
+            language = PreferencesRepository.getLanguageSync(application),
+            theme = PreferencesRepository.getThemeSync(application),
+            darkMode = PreferencesRepository.getDarkModeSync(application),
+            fontScale = PreferencesRepository.getFontScaleSync(application),
+            simpleMode = PreferencesRepository.getSimpleModeSync(application)
+        )
+    )
     val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
 
     init {
@@ -49,6 +59,16 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         viewModelScope.launch {
             preferencesRepo.darkModeFlow.collect { mode ->
                 _uiState.value = _uiState.value.copy(darkMode = mode)
+            }
+        }
+        viewModelScope.launch {
+            preferencesRepo.fontScaleFlow.collect { scale ->
+                _uiState.value = _uiState.value.copy(fontScale = scale)
+            }
+        }
+        viewModelScope.launch {
+            preferencesRepo.simpleModeFlow.collect { mode ->
+                _uiState.value = _uiState.value.copy(simpleMode = mode)
             }
         }
         viewModelScope.launch {
@@ -83,6 +103,20 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     fun setDarkMode(mode: String) {
         viewModelScope.launch { preferencesRepo.setDarkMode(mode) }
+    }
+
+    fun setFontScale(scale: String) {
+        viewModelScope.launch { preferencesRepo.setFontScale(scale) }
+    }
+
+    fun setSimpleMode(mode: String) {
+        viewModelScope.launch {
+            preferencesRepo.setSimpleMode(mode)
+            // When simple theme is active, setting its mode also updates darkMode
+            if (_uiState.value.theme == "simple") {
+                preferencesRepo.setDarkMode(mode)
+            }
+        }
     }
 
     fun set24HourFormat(is24Hour: Boolean) {

@@ -97,3 +97,28 @@ val AppTypography = Typography(
         lineHeight = 16.sp
     )
 )
+
+fun getTypography(fontScale: String): Typography {
+    val factor = when (fontScale.lowercase()) {
+        "small" -> 0.88f
+        "medium" -> 1.12f
+        "large" -> 1.25f
+        else -> 1.0f
+    }
+    if (factor == 1.0f) return AppTypography
+
+    return Typography(
+        headlineLarge = AppTypography.headlineLarge.copy(fontSize = (32 * factor).sp, lineHeight = (40 * factor).sp),
+        headlineMedium = AppTypography.headlineMedium.copy(fontSize = (28 * factor).sp, lineHeight = (36 * factor).sp),
+        headlineSmall = AppTypography.headlineSmall.copy(fontSize = (24 * factor).sp, lineHeight = (32 * factor).sp),
+        titleLarge = AppTypography.titleLarge.copy(fontSize = (22 * factor).sp, lineHeight = (28 * factor).sp),
+        titleMedium = AppTypography.titleMedium.copy(fontSize = (18 * factor).sp, lineHeight = (24 * factor).sp),
+        titleSmall = AppTypography.titleSmall.copy(fontSize = (14 * factor).sp, lineHeight = (20 * factor).sp),
+        bodyLarge = AppTypography.bodyLarge.copy(fontSize = (16 * factor).sp, lineHeight = (24 * factor).sp),
+        bodyMedium = AppTypography.bodyMedium.copy(fontSize = (14 * factor).sp, lineHeight = (20 * factor).sp),
+        bodySmall = AppTypography.bodySmall.copy(fontSize = (12 * factor).sp, lineHeight = (16 * factor).sp),
+        labelLarge = AppTypography.labelLarge.copy(fontSize = (14 * factor).sp, lineHeight = (20 * factor).sp),
+        labelMedium = AppTypography.labelMedium.copy(fontSize = (12 * factor).sp, lineHeight = (16 * factor).sp),
+        labelSmall = AppTypography.labelSmall.copy(fontSize = (11 * factor).sp, lineHeight = (16 * factor).sp)
+    )
+}

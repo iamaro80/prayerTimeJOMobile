@@ -155,8 +155,58 @@ val DeepCharcoalYellowTokens = CustomThemeTokens(
     countdownRingProgress = Color(0xFFFFEA00)
 )
 
+// 6. Simple Theme (Light and Dark variants)
+val SimpleThemeLightColorScheme = lightColorScheme(
+    surface = Color(0xFFFFFFFF),
+    surfaceContainer = Color(0xFFF1F5F9),
+    onSurface = Color(0xFF0F172A),
+    onSurfaceVariant = Color(0xFF475569),
+    primary = Color(0xFF2563EB),
+    primaryContainer = Color(0xFFDBEAFE),
+    onPrimaryContainer = Color(0xFF1E40AF),
+    secondaryContainer = Color(0xFFF1F5F9),
+    onSecondaryContainer = Color(0xFF0F172A),
+    background = Color(0xFFF8FAFC),
+    onBackground = Color(0xFF0F172A)
+)
+
+val SimpleThemeDarkColorScheme = darkColorScheme(
+    surface = Color(0xFF18181B),
+    surfaceContainer = Color(0xFF27272A),
+    onSurface = Color(0xFFFAFAFA),
+    onSurfaceVariant = Color(0xFFA1A1AA),
+    primary = Color(0xFF3B82F6),
+    primaryContainer = Color(0xFF1E3A8A),
+    onPrimaryContainer = Color(0xFFBFDBFE),
+    secondaryContainer = Color(0xFF27272A),
+    onSecondaryContainer = Color(0xFFFAFAFA),
+    background = Color(0xFF09090B),
+    onBackground = Color(0xFFFAFAFA)
+)
+
+val SimpleThemeLightTokens = CustomThemeTokens(
+    heroGradientStart = Color(0xFF2563EB),
+    heroGradientEnd = Color(0xFF1D4ED8),
+    heroAccentContainer = Color(0x33FFFFFF),
+    onHeroAccentContainer = Color(0xFFFFFFFF),
+    activeCardOutline = Color(0xFF2563EB),
+    countdownRingTrack = Color(0x33FFFFFF),
+    countdownRingProgress = Color(0xFFFFFFFF)
+)
+
+val SimpleThemeDarkTokens = CustomThemeTokens(
+    heroGradientStart = Color(0xFF1E3A8A),
+    heroGradientEnd = Color(0xFF172554),
+    heroAccentContainer = Color(0x223B82F6),
+    onHeroAccentContainer = Color(0xFF93C5FD),
+    activeCardOutline = Color(0xFF3B82F6),
+    countdownRingTrack = Color(0x333B82F6),
+    countdownRingProgress = Color(0xFF60A5FA)
+)
+
 fun getThemeColorScheme(themeName: String, isDark: Boolean): ColorScheme {
     return when (themeName.lowercase()) {
+        "simple" -> if (isDark) SimpleThemeDarkColorScheme else SimpleThemeLightColorScheme
         "soft_terracotta", "terracotta" -> SoftTerracottaColorScheme
         "seafoam_sand", "seafoam" -> SeafoamSandColorScheme
         "muted_slate_gold", "slate", "gold" -> MutedSlateGoldColorScheme
@@ -165,8 +215,9 @@ fun getThemeColorScheme(themeName: String, isDark: Boolean): ColorScheme {
     }
 }
 
-fun getCustomThemeTokens(themeName: String): CustomThemeTokens {
+fun getCustomThemeTokens(themeName: String, isDark: Boolean = false): CustomThemeTokens {
     return when (themeName.lowercase()) {
+        "simple" -> if (isDark) SimpleThemeDarkTokens else SimpleThemeLightTokens
         "soft_terracotta", "terracotta" -> SoftTerracottaTokens
         "seafoam_sand", "seafoam" -> SeafoamSandTokens
         "muted_slate_gold", "slate", "gold" -> MutedSlateGoldTokens

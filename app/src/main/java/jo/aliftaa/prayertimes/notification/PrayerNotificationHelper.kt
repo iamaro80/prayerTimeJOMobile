@@ -1,4 +1,4 @@
-﻿package jo.aliftaa.prayertimes.notification
+package jo.aliftaa.prayertimes.notification
 
 import android.app.AlarmManager
 import android.app.NotificationChannel
@@ -240,6 +240,13 @@ class PrayerNotificationHelper(private val context: Context) {
             .build()
 
         notificationManager.notify(prayerName.hashCode(), notification)
+
+        // Update home-screen widget when a prayer starts
+        try {
+            jo.aliftaa.prayertimes.widget.PrayerWidgetProvider.triggerUpdate(context)
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to trigger widget update from notification: ${e.message}")
+        }
     }
 
     fun showReminderNotification(prayerName: String, minutes: Int) {

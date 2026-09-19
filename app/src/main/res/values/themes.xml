@@ -1,5 +1,6 @@
-﻿<resources>
-    <style name="Theme.PrayerTimes" parent="android:Theme.Material.Light.NoActionBar">
+<resources>
+    <style name="Theme.PrayerTimes" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">#14191C</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>

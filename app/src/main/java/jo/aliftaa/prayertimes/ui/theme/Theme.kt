@@ -12,6 +12,7 @@ fun PrayerTimeTheme(
     themeName: String = "emerald_original",
     darkMode: String = "system",
     language: String = "ar",
+    fontScale: String = "default",
     content: @Composable () -> Unit
 ) {
     val isDark = when (darkMode) {
@@ -21,7 +22,7 @@ fun PrayerTimeTheme(
     }
 
     val colorScheme = getThemeColorScheme(themeName, isDark)
-    val customTokens = getCustomThemeTokens(themeName)
+    val customTokens = getCustomThemeTokens(themeName, isDark)
     val layoutDirection = if (language == "ar") LayoutDirection.Rtl else LayoutDirection.Ltr
 
     val locale = if (language == "ar") {
@@ -44,7 +45,7 @@ fun PrayerTimeTheme(
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
-            typography = AppTypography,
+            typography = getTypography(fontScale),
             shapes = AppShapes,
             content = content
         )

@@ -38,12 +38,26 @@ fun CountdownTimerCard(
     totalSecondsForProgress: Long = 3600L * 4,
     isArabic: Boolean
 ) {
+    val isFriday = java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_WEEK) == java.util.Calendar.FRIDAY
+
     val prayerName = if (nextPrayer != null) {
-        if (isArabic) nextPrayer.nameAr else nextPrayer.nameEn
+        if (isFriday && nextPrayer.id.equals("dhuhr", ignoreCase = true)) {
+            stringResource(R.string.prayer_jumuah)
+        } else if (isArabic) {
+            nextPrayer.nameAr
+        } else {
+            nextPrayer.nameEn
+        }
     } else ""
 
     val currentName = if (currentPrayer != null) {
-        if (isArabic) currentPrayer.nameAr else currentPrayer.nameEn
+        if (isFriday && currentPrayer.id.equals("dhuhr", ignoreCase = true)) {
+            stringResource(R.string.prayer_jumuah)
+        } else if (isArabic) {
+            currentPrayer.nameAr
+        } else {
+            currentPrayer.nameEn
+        }
     } else ""
 
     val hours = remainingSeconds / 3600
@@ -163,7 +177,14 @@ fun PrayerItemCard(
  notifEnabled: Boolean,
  soundEnabled: Boolean
 ) {
- val displayName = if (isArabic) prayer.nameAr else prayer.nameEn
+ val isFriday = java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_WEEK) == java.util.Calendar.FRIDAY
+ val displayName = if (isFriday && prayer.id.equals("dhuhr", ignoreCase = true)) {
+     stringResource(R.string.prayer_jumuah)
+ } else if (isArabic) {
+     prayer.nameAr
+ } else {
+     prayer.nameEn
+ }
  val displayTime = DateUtils.formatTimeDisplay(prayer.time24, is24Hour, isArabic)
  val customTokens = LocalCustomThemeTokens.current
 

@@ -1,4 +1,4 @@
-﻿package jo.aliftaa.prayertimes.notification
+package jo.aliftaa.prayertimes.notification
 
 import android.content.Context
 import android.util.Log
@@ -78,6 +78,11 @@ class PrayerSyncWorker(
                 val feed = result.getOrNull()
                 if (feed != null) {
                     PrayerNotificationHelper(context).scheduleAlarms(feed.prayers, prefs)
+                    try {
+                        jo.aliftaa.prayertimes.widget.PrayerWidgetProvider.triggerUpdate(context)
+                    } catch (e: Exception) {
+                        // ignore
+                    }
                 }
                 Result.success()
             } else {

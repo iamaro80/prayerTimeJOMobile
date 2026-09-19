@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Warning
@@ -31,7 +32,8 @@ fun HomeScreen(
     viewModel: PrayerViewModel,
     hasNotificationPermission: Boolean,
     onRequestNotificationPermission: () -> Unit,
-    onNavigateToSettings: () -> Unit
+    onNavigateToSettings: () -> Unit,
+    onNavigateToQibla: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val locale = if (uiState.isArabic) Locale.forLanguageTag("ar-JO-u-nu-latn") else Locale.ENGLISH
@@ -66,6 +68,13 @@ fun HomeScreen(
                     }
                 },
                 actions = {
+                    IconButton(onClick = onNavigateToQibla) {
+                        Icon(
+                            imageVector = Icons.Default.Explore,
+                            contentDescription = stringResource(R.string.qibla_compass)
+                        )
+                    }
+
                     IconButton(onClick = { viewModel.loadPrayerTimes(forceRefresh = true) }) {
                         if (uiState.isLoading) {
                             CircularProgressIndicator(modifier = Modifier.size(22.dp), strokeWidth = 2.dp)

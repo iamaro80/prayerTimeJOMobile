@@ -1,4 +1,4 @@
-﻿package jo.aliftaa.prayertimes.ui.viewmodel
+package jo.aliftaa.prayertimes.ui.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -29,8 +29,9 @@ data class PrayerUiState(
     val remainingSeconds: Long = 0L,
     val isArabic: Boolean = true,
     val is24Hour: Boolean = false,
-    val theme: String = "green",
-    val darkMode: String = "system"
+    val theme: String = "emerald_original",
+    val darkMode: String = "system",
+    val fontScale: String = "default"
 )
 
 class PrayerViewModel(application: Application) : AndroidViewModel(application) {
@@ -40,7 +41,14 @@ class PrayerViewModel(application: Application) : AndroidViewModel(application) 
     private val notificationHelper = PrayerNotificationHelper(application)
     private val syncScheduler = SyncScheduler(application)
 
-    private val _uiState = MutableStateFlow(PrayerUiState())
+    private val _uiState = MutableStateFlow(
+        PrayerUiState(
+            isArabic = PreferencesRepository.getLanguageSync(application) == "ar",
+            theme = PreferencesRepository.getThemeSync(application),
+            darkMode = PreferencesRepository.getDarkModeSync(application),
+            fontScale = PreferencesRepository.getFontScaleSync(application)
+        )
+    )
     val uiState: StateFlow<PrayerUiState> = _uiState.asStateFlow()
 
     init {
@@ -61,6 +69,11 @@ class PrayerViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch {
             preferencesRepo.darkModeFlow.collect { mode ->
                 _uiState.value = _uiState.value.copy(darkMode = mode)
+            }
+        }
+        viewModelScope.launch {
+            preferencesRepo.fontScaleFlow.collect { scale ->
+                _uiState.value = _uiState.value.copy(fontScale = scale)
             }
         }
         viewModelScope.launch {
@@ -98,6 +111,11 @@ class PrayerViewModel(application: Application) : AndroidViewModel(application) 
                 // Schedule notifications
                 feed?.let {
                     notificationHelper.scheduleAlarms(it.prayers, preferencesRepo)
+                    try {
+                        jo.aliftaa.prayertimes.widget.PrayerWidgetProvider.triggerUpdate(getApplication())
+                    } catch (e: Exception) {
+                        // ignore
+                    }
                 }
                 updatePrayerTimesState()
             } else {

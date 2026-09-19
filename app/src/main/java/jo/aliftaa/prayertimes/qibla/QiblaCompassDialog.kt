@@ -39,6 +39,8 @@ import kotlin.math.sin
 
 @Composable
 fun QiblaCompassDialog(
+    hasLocationPermission: Boolean,
+    onRequestLocationPermission: () -> Unit,
     onDismiss: () -> Unit
 ) {
     val context = LocalContext.current
@@ -46,8 +48,7 @@ fun QiblaCompassDialog(
     var currentAzimuth by remember { mutableStateOf(0f) }
     var sensorAccuracy by remember { mutableIntStateOf(SensorManager.SENSOR_STATUS_ACCURACY_HIGH) }
 
-    // Resolve user location for Qibla calculation, falling back to Amman
-    val userBearing = remember(context) {
+    fun resolveUserBearing(): Float {
         var userLat = QiblaSensorManager.AMMAN_LAT
         var userLng = QiblaSensorManager.AMMAN_LNG
         val hasCoarse = ContextCompat.checkSelfPermission(
@@ -62,7 +63,7 @@ fun QiblaCompassDialog(
         if (hasCoarse || hasFine) {
             try {
                 val locManager = context.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
-                val providers = locManager?.getProviders(true) ?: emptyList()
+                val providers = listOf(LocationManager.GPS_PROVIDER, LocationManager.NETWORK_PROVIDER, LocationManager.PASSIVE_PROVIDER)
                 var bestLocation: Location? = null
                 for (provider in providers) {
                     val l = locManager?.getLastKnownLocation(provider) ?: continue
@@ -78,7 +79,17 @@ fun QiblaCompassDialog(
                 // Graceful fallback to Amman
             }
         }
-        QiblaSensorManager.calculateQiblaBearing(userLat, userLng)
+        return QiblaSensorManager.calculateQiblaBearing(userLat, userLng)
+    }
+
+    var userBearing by remember { mutableFloatStateOf(resolveUserBearing()) }
+
+    LaunchedEffect(hasLocationPermission) {
+        if (!hasLocationPermission) {
+            onRequestLocationPermission()
+        } else {
+            userBearing = resolveUserBearing()
+        }
     }
 
     DisposableEffect(sensorManager) {

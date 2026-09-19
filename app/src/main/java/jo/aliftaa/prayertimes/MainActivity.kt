@@ -79,21 +79,25 @@ class MainActivity : ComponentActivity() {
                 hasNotificationPermission = isGranted
             }
 
-            val locationPermissionLauncher = rememberLauncherForActivityResult(
-                contract = ActivityResultContracts.RequestPermission()
-            ) { _ -> }
-
             LaunchedEffect(Unit) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !hasNotificationPermission) {
                     notifPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
-                val hasLocationPermission = ContextCompat.checkSelfPermission(
-                    this@MainActivity,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
-                if (!hasLocationPermission) {
-                    locationPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
-                }
+            }
+
+            var hasLocationPermission by remember {
+                mutableStateOf(
+                    ContextCompat.checkSelfPermission(
+                        this@MainActivity,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ) == PackageManager.PERMISSION_GRANTED
+                )
+            }
+
+            val locationPermissionLauncher = rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.RequestPermission()
+            ) { isGranted ->
+                hasLocationPermission = isGranted
             }
 
             PrayerTimeTheme(
@@ -128,6 +132,10 @@ class MainActivity : ComponentActivity() {
 
                     if (showQiblaDialog) {
                         jo.aliftaa.prayertimes.qibla.QiblaCompassDialog(
+                            hasLocationPermission = hasLocationPermission,
+                            onRequestLocationPermission = {
+                                locationPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
+                            },
                             onDismiss = { showQiblaDialog = false }
                         )
                     }

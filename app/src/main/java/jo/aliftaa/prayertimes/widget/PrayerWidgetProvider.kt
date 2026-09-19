@@ -40,6 +40,16 @@ class PrayerWidgetProvider : AppWidgetProvider() {
         }
     }
 
+    override fun onEnabled(context: Context) {
+        super.onEnabled(context)
+        schedulePeriodicTick(context)
+    }
+
+    override fun onDisabled(context: Context) {
+        super.onDisabled(context)
+        cancelPeriodicTick(context)
+    }
+
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
         if (intent.action == ACTION_UPDATE_WIDGET) {
@@ -62,6 +72,45 @@ class PrayerWidgetProvider : AppWidgetProvider() {
 
     companion object {
         const val ACTION_UPDATE_WIDGET = "jo.aliftaa.prayertimes.ACTION_UPDATE_WIDGET"
+        private const val WIDGET_TICK_REQUEST_CODE = 998811
+        private const val TICK_INTERVAL_MS = 5 * 60 * 1000L // 5 minutes
+
+        fun schedulePeriodicTick(context: Context) {
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? android.app.AlarmManager ?: return
+            val intent = Intent(context, PrayerWidgetProvider::class.java).apply {
+                action = ACTION_UPDATE_WIDGET
+            }
+            val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                WIDGET_TICK_REQUEST_CODE,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            val triggerAt = System.currentTimeMillis() + TICK_INTERVAL_MS
+            alarmManager.setInexactRepeating(
+                android.app.AlarmManager.RTC,
+                triggerAt,
+                TICK_INTERVAL_MS,
+                pendingIntent
+            )
+        }
+
+        fun cancelPeriodicTick(context: Context) {
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? android.app.AlarmManager ?: return
+            val intent = Intent(context, PrayerWidgetProvider::class.java).apply {
+                action = ACTION_UPDATE_WIDGET
+            }
+            val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                WIDGET_TICK_REQUEST_CODE,
+                intent,
+                PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
+            )
+            if (pendingIntent != null) {
+                alarmManager.cancel(pendingIntent)
+                pendingIntent.cancel()
+            }
+        }
 
         fun triggerUpdate(context: Context) {
             val intent = Intent(context, PrayerWidgetProvider::class.java).apply {

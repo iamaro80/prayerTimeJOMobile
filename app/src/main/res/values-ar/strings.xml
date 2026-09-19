@@ -27,6 +27,7 @@
     <string name="qibla_heading">الاتجاه الحالي: %1$.0f°</string>
     <string name="qibla_sensor_missing">حساسات البوصلة غير متوفرة في هذا الجهاز.</string>
     <string name="qibla_amman_direction">من مدينة عمان، اتجاه القبلة حوالي 161° (جنوب - جنوب شرق).</string>
+    <string name="qibla_calibration_needed">للحصول على اتجاه دقيق للقبلة، يرجى تحريك الهاتف على شكل الرقم 8 بعيداً عن المعادن.</string>
     <string name="close">إغلاق</string>
     <string name="sync_now">تحديث أوقات الصلاة</string>
     <string name="syncing">جارٍ المزامنة مع دائرة الإفتاء…</string>

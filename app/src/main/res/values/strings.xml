@@ -27,6 +27,7 @@
     <string name="qibla_heading">Current Heading: %1$.0f°</string>
     <string name="qibla_sensor_missing">Compass sensors are not available on this device.</string>
     <string name="qibla_amman_direction">From Amman, Jordan, the Qibla is approximately 161° (South-Southeast).</string>
+    <string name="qibla_calibration_needed">For accurate Qibla direction, move your phone in a figure-8 motion away from metal objects.</string>
     <string name="close">Close</string>
     <string name="sync_now">Sync Now</string>
     <string name="syncing">Syncing with Iftaa…</string>
@@ -46,7 +47,7 @@
     
     <string name="pref_language">Language</string>
     <string name="pref_language_summary">Choose Arabic or English</string>
-    <string name="language_ar">العربية (Arabic)</string>
+    <string name="language_ar">Arabic</string>
     <string name="language_en">English</string>
     
     <string name="pref_time_format">Time Format</string>
@@ -98,10 +99,10 @@
     <!-- Azan Track Titles -->
     <string name="track_1">Adhan 1 (Egypt)</string>
     <string name="track_2">Adhan 2 (Makkah)</string>
-    <string name="track_3">Adhan 3 (Hijazi)</string>
+    <string name="track_3">Adhan 3 (Hijazi Voice)</string>
     <string name="track_4">Adhan 4 (Al-Aqsa Mosque)</string>
-    <string name="track_5">Adhan 5 (Calm)</string>
-    <string name="track_6">Adhan 6 (Melodious)</string>
+    <string name="track_5">Adhan 5 (Calm Voice)</string>
+    <string name="track_6">Adhan 6 (Melodious Voice)</string>
     <string name="track_7">Adhan 7 (Egyptian)</string>
     <string name="track_8">Adhan 8 (Haram Makkah)</string>
     <string name="track_9">Adhan 9 (Prophet Mosque)</string>

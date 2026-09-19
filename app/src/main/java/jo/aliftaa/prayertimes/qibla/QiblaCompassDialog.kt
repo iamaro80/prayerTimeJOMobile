@@ -1,14 +1,20 @@
 package jo.aliftaa.prayertimes.qibla
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.hardware.SensorManager
+import android.location.Location
+import android.location.LocationManager
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Navigation
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,22 +22,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import androidx.core.content.ContextCompat
 import jo.aliftaa.prayertimes.R
 import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
-
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 
 @Composable
 fun QiblaCompassDialog(
@@ -40,11 +44,49 @@ fun QiblaCompassDialog(
     val context = LocalContext.current
     val sensorManager = remember { QiblaSensorManager(context) }
     var currentAzimuth by remember { mutableStateOf(0f) }
-    val qiblaBearing = remember { QiblaSensorManager.calculateQiblaBearing() } // ~161° for Amman
+    var sensorAccuracy by remember { mutableIntStateOf(SensorManager.SENSOR_STATUS_ACCURACY_HIGH) }
+
+    // Resolve user location for Qibla calculation, falling back to Amman
+    val userBearing = remember(context) {
+        var userLat = QiblaSensorManager.AMMAN_LAT
+        var userLng = QiblaSensorManager.AMMAN_LNG
+        val hasCoarse = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        val hasFine = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+        if (hasCoarse || hasFine) {
+            try {
+                val locManager = context.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
+                val providers = locManager?.getProviders(true) ?: emptyList()
+                var bestLocation: Location? = null
+                for (provider in providers) {
+                    val l = locManager?.getLastKnownLocation(provider) ?: continue
+                    if (bestLocation == null || l.time > bestLocation.time) {
+                        bestLocation = l
+                    }
+                }
+                if (bestLocation != null) {
+                    userLat = bestLocation.latitude
+                    userLng = bestLocation.longitude
+                }
+            } catch (_: SecurityException) {
+                // Graceful fallback to Amman
+            }
+        }
+        QiblaSensorManager.calculateQiblaBearing(userLat, userLng)
+    }
 
     DisposableEffect(sensorManager) {
         sensorManager.onAzimuthChanged = { azimuth ->
             currentAzimuth = azimuth
+        }
+        sensorManager.onAccuracyChanged = { accuracy ->
+            sensorAccuracy = accuracy
         }
         sensorManager.start()
         onDispose {
@@ -60,8 +102,12 @@ fun QiblaCompassDialog(
     )
 
     // Qibla needle angle relative to device top
-    val relativeQiblaAngle = (qiblaBearing - currentAzimuth + 360f) % 360f
+    val relativeQiblaAngle = (userBearing - currentAzimuth + 360f) % 360f
     val isFacingQibla = abs((relativeQiblaAngle + 180f) % 360f - 180f) < 5f
+
+    // Needs calibration if accuracy is low or unreliable
+    val needsCalibration = sensorAccuracy == SensorManager.SENSOR_STATUS_ACCURACY_LOW ||
+            sensorAccuracy == SensorManager.SENSOR_STATUS_UNRELIABLE
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -127,6 +173,35 @@ fun QiblaCompassDialog(
                         }
                     }
                 } else {
+                    // Calibration banner when accuracy is LOW or UNRELIABLE
+                    AnimatedVisibility(visible = needsCalibration) {
+                        Surface(
+                            color = MaterialTheme.colorScheme.tertiaryContainer,
+                            shape = MaterialTheme.shapes.small,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 12.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(10.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Warning,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = stringResource(R.string.qibla_calibration_needed),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onTertiaryContainer
+                                )
+                            }
+                        }
+                    }
+
                     // Compass dial
                     Box(
                         contentAlignment = Alignment.Center,
@@ -170,15 +245,40 @@ fun QiblaCompassDialog(
                             }
                         }
 
-                        // Qibla needle pointer pointing to Kaaba
-                        Icon(
-                            imageVector = Icons.Default.Navigation,
-                            contentDescription = null,
+                        // Qibla needle & Kaaba Icon pointing towards Makkah
+                        Box(
                             modifier = Modifier
-                                .size(64.dp)
+                                .fillMaxSize()
                                 .rotate(relativeQiblaAngle),
-                            tint = if (isFacingQibla) Color(0xFF10B981) else MaterialTheme.colorScheme.primary
-                        )
+                            contentAlignment = Alignment.TopCenter
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.padding(top = 10.dp)
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_kaaba),
+                                    contentDescription = stringResource(R.string.qibla_compass),
+                                    modifier = Modifier.size(36.dp),
+                                    tint = if (isFacingQibla) Color(0xFF10B981) else Color.Unspecified
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                // Pointer arrow
+                                Canvas(modifier = Modifier.size(16.dp, 24.dp)) {
+                                    val arrowPath = androidx.compose.ui.graphics.Path().apply {
+                                        moveTo(size.width / 2f, 0f)
+                                        lineTo(size.width, size.height)
+                                        lineTo(size.width / 2f, size.height * 0.7f)
+                                        lineTo(0f, size.height)
+                                        close()
+                                    }
+                                    drawPath(
+                                        path = arrowPath,
+                                        color = if (isFacingQibla) Color(0xFF10B981) else Color(0xFFE11D48)
+                                    )
+                                }
+                            }
+                        }
 
                         // Center pin
                         Surface(
@@ -191,7 +291,7 @@ fun QiblaCompassDialog(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
-                        text = String.format(Locale.US, stringResource(R.string.qibla_bearing), qiblaBearing),
+                        text = String.format(Locale.US, stringResource(R.string.qibla_bearing), userBearing),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary

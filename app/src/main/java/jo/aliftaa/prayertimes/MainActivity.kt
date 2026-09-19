@@ -73,15 +73,26 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
-            val permissionLauncher = rememberLauncherForActivityResult(
+            val notifPermissionLauncher = rememberLauncherForActivityResult(
                 contract = ActivityResultContracts.RequestPermission()
             ) { isGranted ->
                 hasNotificationPermission = isGranted
             }
 
+            val locationPermissionLauncher = rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.RequestPermission()
+            ) { _ -> }
+
             LaunchedEffect(Unit) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !hasNotificationPermission) {
-                    permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    notifPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+                val hasLocationPermission = ContextCompat.checkSelfPermission(
+                    this@MainActivity,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+                if (!hasLocationPermission) {
+                    locationPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
                 }
             }
 
@@ -104,7 +115,7 @@ class MainActivity : ComponentActivity() {
                         hasNotificationPermission = hasNotificationPermission,
                         onRequestNotificationPermission = {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                notifPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                             }
                         },
                         onNavigateToSettings = {

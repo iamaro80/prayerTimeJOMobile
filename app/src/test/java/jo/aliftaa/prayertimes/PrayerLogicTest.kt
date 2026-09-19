@@ -1,4 +1,4 @@
-﻿package jo.aliftaa.prayertimes
+package jo.aliftaa.prayertimes
 
 import jo.aliftaa.prayertimes.data.parser.PrayerRssParser
 import jo.aliftaa.prayertimes.utils.DateUtils
@@ -84,5 +84,20 @@ class PrayerLogicTest {
         // 24-hour format test
         val time24 = DateUtils.formatTimeDisplay("16:02", is24Hour = true, isArabic = true)
         assertEquals("16:02", time24)
+    }
+
+    @Test
+    fun testQiblaBearingsForJordanianCities() {
+        // Amman: expected ~160.7° (~161°)
+        val ammanBearing = jo.aliftaa.prayertimes.qibla.QiblaSensorManager.calculateQiblaBearing(31.9539, 35.9106)
+        assertEquals(160.71f, ammanBearing, 0.5f)
+
+        // Aqaba: expected ~150.7° (within Jordan's southern region)
+        val aqabaBearing = jo.aliftaa.prayertimes.qibla.QiblaSensorManager.calculateQiblaBearing(29.5321, 35.0063)
+        assertEquals(150.71f, aqabaBearing, 0.5f)
+
+        // Irbid: expected ~161.4° (within Jordan's northern region)
+        val irbidBearing = jo.aliftaa.prayertimes.qibla.QiblaSensorManager.calculateQiblaBearing(32.5568, 35.8469)
+        assertEquals(161.39f, irbidBearing, 0.5f)
     }
 }

@@ -26,13 +26,14 @@ class QiblaSensorManager(context: Context) : SensorEventListener {
     private val orientation = FloatArray(3)
 
     var onAzimuthChanged: ((Float) -> Unit)? = null
+    var onAccuracyChanged: ((Int) -> Unit)? = null
 
     // Kaaba coordinates (Mecca)
     companion object {
         const val MECCA_LAT = 21.422487
         const val MECCA_LNG = 39.826206
 
-        // Amman coordinates
+        // Amman coordinates (fallback)
         const val AMMAN_LAT = 31.9539
         const val AMMAN_LNG = 35.9106
 
@@ -94,5 +95,9 @@ class QiblaSensorManager(context: Context) : SensorEventListener {
         }
     }
 
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+        if (sensor?.type == Sensor.TYPE_MAGNETIC_FIELD) {
+            onAccuracyChanged?.invoke(accuracy)
+        }
+    }
 }

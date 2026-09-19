@@ -1,0 +1,35 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <!-- Top Cube Face (Roof) -->
+    <path
+        android:fillColor="#374151"
+        android:pathData="M24,7 L39,15 L24,23 L9,15 Z" />
+
+    <!-- Left Cube Face -->
+    <path
+        android:fillColor="#111827"
+        android:pathData="M9,15 L24,23 L24,41 L9,33 Z" />
+
+    <!-- Right Cube Face -->
+    <path
+        android:fillColor="#1F2937"
+        android:pathData="M24,23 L39,15 L39,33 L24,41 Z" />
+
+    <!-- Kiswa Gold Band (Left Face) -->
+    <path
+        android:fillColor="#F59E0B"
+        android:pathData="M9,19 L24,27 L24,29 L9,21 Z" />
+
+    <!-- Kiswa Gold Band (Right Face) -->
+    <path
+        android:fillColor="#D97706"
+        android:pathData="M24,27 L39,19 L39,21 L24,29 Z" />
+
+    <!-- Kaaba Door (Right Face) -->
+    <path
+        android:fillColor="#FBBF24"
+        android:pathData="M28,29 L32,27 L32,36 L28,38 Z" />
+</vector>

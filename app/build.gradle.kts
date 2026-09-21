@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -5,12 +8,12 @@ plugins {
 
 android {
     namespace = "jo.aliftaa.prayertimes"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "jo.aliftaa.prayertimes"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0.0"
 
@@ -19,6 +22,31 @@ android {
 
     testOptions {
         unitTests.isReturnDefaultValues = true
+    }
+
+    val keystorePropertiesFile = rootProject.file("keystore.properties")
+    val keystoreProperties = Properties()
+    val hasKeystore = keystorePropertiesFile.exists()
+    if (hasKeystore) {
+        keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+    }
+
+    val storeFilePath = if (hasKeystore) keystoreProperties.getProperty("storeFile") else null
+    val resolvedStoreFile = if (storeFilePath != null) {
+        val rootFile = rootProject.file(storeFilePath)
+        val projectFile = file(storeFilePath)
+        if (rootFile.exists()) rootFile else projectFile
+    } else null
+
+    signingConfigs {
+        create("release") {
+            if (hasKeystore && resolvedStoreFile?.exists() == true) {
+                storeFile = resolvedStoreFile
+                storePassword = keystoreProperties.getProperty("storePassword")
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+            }
+        }
     }
 
     buildTypes {
@@ -33,7 +61,18 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("debug")
+            if (hasKeystore && resolvedStoreFile?.exists() == true) {
+                signingConfig = signingConfigs.getByName("release")
+            } else {
+                val currentTasks = gradle.startParameter.taskNames
+                val isReleaseBuild = currentTasks.any { it.contains("Release", ignoreCase = true) }
+                if (isReleaseBuild) {
+                    throw org.gradle.api.GradleException(
+                        "Release build failed: 'keystore.properties' or the keystore file specified in it was not found. " +
+                        "Please create 'keystore.properties' with storeFile, storePassword, keyAlias, and keyPassword."
+                    )
+                }
+            }
         }
     }
 

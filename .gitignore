@@ -1,4 +1,4 @@
-﻿*.iml
+*.iml
 .gradle
 /local.properties
 /.idea
@@ -18,3 +18,8 @@
 !/app/src/**
 !/gradle/**
 !/assets/**
+
+# Keystores & credentials
+keystore.properties
+*.jks
+*.keystore
